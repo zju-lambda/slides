@@ -1,5 +1,5 @@
 script:
-- openssl aes-256-cbc -K $encrypted_48843d198e7b_key -iv $encrypted_48843d198e7b_iv -in id_rsa.enc -out id_rsa -d
+- openssl aes-256-cbc -K $encrypted_74ff3ccf1e5e_key -iv $encrypted_74ff3ccf1e5e_iv -in id_rsa.enc -out id_rsa -d
 - mv id_rsa ~/.ssh
 - eval "$(ssh-agent -s)"
 - chmod 600 ~/.ssh/id_rsa
