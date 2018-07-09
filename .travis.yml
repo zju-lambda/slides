@@ -7,3 +7,4 @@ script:
 - echo "StrictHostKeyChecking no" > ~/.ssh/config
 - rm -rf .git* id_rsa*
 - rsync -r --delete-after --quiet . ubuntu@zju-lambda.tech:/home/ubuntu/static/slides
+
