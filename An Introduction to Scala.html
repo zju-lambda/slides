@@ -1,0 +1,1243 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <title>An Introduction to Scala</title>
+  <style type="text/css">
+    /* Color Palette Based on Monokai
+
+white       : #fafafa
+light grey  : #efefef
+grey        : #75715e
+dark grey   : #272822
+black       : #191919
+
+light blue  : #66d9ef
+blue        : #1db4d0
+lavender    : #bf79db
+magenta     : #f92672
+light green : #a6e22e
+*/
+
+@import url(https://fonts.googleapis.com/css?family=Hind:400,500,600,700,300);
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700);
+@import url(https://fonts.googleapis.com/css?family=Inconsolata:400,700);
+
+/* Theme Styles */
+body {
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 300;
+  font-size: 100%;
+  color: #191919;
+  background-color: #000;
+}
+
+/* Custom Slide Styles */
+#slide-1 {
+  color: #fafafa;
+  background: #222;
+  background-size: cover;
+}
+#slide-1::after {
+  position: absolute;
+  top: 0;
+  left: 0;
+  content: " ";
+  width: 100%;
+  height: 100%;
+  opacity: 0.5;
+  background: url('background-image.jpg') center center no-repeat;
+  background-size: cover;
+}
+
+#slide-1 h1 {
+  text-shadow: 1px 2px 4px #191919;
+}
+
+#slide-1 p {
+  text-shadow: 1px 1px 1px #191919;
+}
+
+.center {
+  text-align: center;
+}
+
+img.badge {
+  height: 128px;
+  width: 128px !important;
+  border-radius: 50% !important;
+}
+
+
+/* The following is needed for the ESC overview slide selection */
+.slides {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.slides.active .slide:not(.hidden) {
+  border: 22px solid red;
+}
+
+.slide-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9;
+  cursor: pointer;
+  display: none;
+}
+
+.slides.active .slide:hover .slide-overlay::before {
+  content: '▶';
+  text-align: center;
+  line-height: 300px;
+  font-size: 200px;
+  color: #fff;
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+.slides.active .slide:hover .slide-overlay{
+  display: block;
+  background: rgba(0,0,0,0.5);
+}
+.slide-wrapper {
+  margin: 7px;
+  transition: all 250ms;
+}
+
+/* Presentation Styles */
+.slide {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  padding: 100px;
+  z-index: 1;
+  overflow: hidden;
+  box-sizing: border-box;
+  background-color: #FFF;
+}
+
+.slide::before {
+  position: absolute;
+  top: 0;
+  left: 0;
+  content: " ";
+  width: 100%;
+  height: 100%;
+  opacity: 0.4;
+  background: url('clean-white-polygon-backgrounds-7.jpg') center center no-repeat;
+  background-size: cover;
+  z-index: 1;
+}
+
+.slide-content {
+  position: relative;
+  z-index: 2;
+  opacity: 1;
+  max-width: 800px;
+  max-height: 600px;
+  margin: 80px auto 0 auto;
+  padding: 0;
+  font-size: 200%;
+  font-weight: 200;
+  line-height: 1.375;
+  overflow: hidden;
+}
+
+.slide-content img {
+  width: 100%;
+  border-radius: 3px;
+}
+
+.controls {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  z-index: 3;
+}
+
+.overview {
+  display: inline-block;
+  float: left;
+  color: #C7C7C7;
+  margin-right: 15px;
+  font-weight: bold;
+  font-size: 30px;
+  line-height: 30px;
+  cursor: pointer;
+}
+.overview:hover {
+  color: #1DB4D0;
+}
+.arrow {
+  float: left;
+  height: 0;
+  width: 0;
+  margin-right: 15px;
+  border: 15px solid #C7C7C7;
+  -webkit-touch-callout: none;
+    -webkit-user-select: none;
+     -khtml-user-select: none;
+       -moz-user-select: none;
+        -ms-user-select: none;
+            user-select: none;
+}
+
+.prev {
+  border-top-color: transparent;
+  border-right-width: 25px;
+  border-bottom-color: transparent;
+  border-left-color: transparent;
+  border-left-width: 0;
+}
+
+.next {
+  border-top-color: transparent;
+  border-right-color: transparent;
+  border-right-width: 0;
+  border-bottom-color: transparent;
+  border-left-width: 25px;
+}
+
+.prev:hover {
+  border-right-color: #1DB4D0;
+  cursor: pointer;
+}
+
+.next:hover {
+  border-left-color: #1DB4D0;
+  cursor: pointer;
+}
+
+h1,
+h2,
+h3 {
+  font-family: 'Hind', sans-serif;
+  font-weight: 500;
+}
+
+h1 {
+  margin: 170px 0 0;
+  font-size: 300%;
+  text-align: center;
+  line-height: 1.2;
+}
+
+h2 {
+  margin: 5px 0;
+  font-size: 100%;
+  font-weight: 200;
+  text-align: center;
+  line-height: 1.2;
+}
+
+h3 {
+  margin: 0;
+  padding-bottom: 15px;
+  font-size: 140%;
+  line-height: 1.2;
+  border-bottom: 1px ridge #191919;
+}
+
+ul {
+  font-weight: 200;
+  line-height: 1.375;
+  padding: 20px 0 0 60px;
+}
+
+blockquote {
+  padding-left: 20px;
+  margin-left: 0;
+  background: #efefef;
+  border-left: 5px solid #272822;
+  border-radius: 0 3px 3px 0;
+}
+
+blockquote p {
+  padding: .5em;
+  color: #272822;
+}
+
+.left {
+  float: left;
+  width: 48%;
+}
+
+.right {
+  float: right;
+  width: 48%;
+}
+
+.author h1 {
+  margin-bottom: 30px;
+  font-size: 170%;
+  font-weight: 200;
+  text-align: center;
+}
+
+.author h3 {
+  font-size: 95%;
+  font-weight: 100;
+  text-align: center;
+  border: none;
+}
+
+.author h3.twitter::before {
+  content: 'Twitter: ';
+}
+
+.author h3.github::before {
+  content: 'Github: ';
+}
+
+.author h3.email::before {
+  content: 'Email: ';
+}
+
+.author h3.url::before {
+  content: 'Web: ';
+}
+
+a {
+  text-decoration: none;
+  color: #1db4d0;
+}
+
+a:hover {
+  color: #1db4d0;
+  border-bottom: 1px solid #1db4d0;
+}
+
+hr {
+  border: 1px solid #272822;
+}
+
+pre {
+  font-size: 75%;
+  line-height: 1.3;
+}
+
+table td,
+table th {
+  padding-right: 3em;
+  text-align: left;
+}
+
+.progress {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 3px;
+  z-index: 2;
+}
+
+.progress-bar {
+  height: 3px;
+  width: 0;
+  background-color: #1DB4D0;
+  -webkit-transition: width .15s ease-out;
+     -moz-transition: width .15s ease-out;
+       -o-transition: width .15s ease-out;
+          transition: width .15s ease-out;
+}
+
+.hidden {
+  display: none;
+}
+
+/* Code Highlighting */
+code {
+  padding: .1em .35em;
+  font-family: 'Inconsolata';
+  background-color: #fafafa;
+  border-radius: 3px;
+}
+
+pre code {
+  display: block;
+  padding: .5em;
+  font-family: 'Inconsolata';
+  font-weight: 400;
+  overflow-y: hidden;
+  background: rgba(255, 255, 255, 0.7);
+}
+
+/*
+
+github.com style (c) Vasily Polovnyov <vast@whiteants.net>
+
+*/
+code.lang-bash-blank{
+  background: #000;
+  color: #fff!important;
+}
+code.lang-bash-blank-small{
+  background: #000;
+  color: #fff!important;
+  font-size: 0.45em;
+}
+
+kbd {
+  display: inline-block;
+  padding: 3px 5px;
+  color: #555;
+  vertical-align: middle;
+  background-color: #fcfcfc;
+  border: solid 1px #ccc;
+  border-bottom-color: #bbb;
+  border-radius: 6px;
+  box-shadow: inset 0 -4px 0 #bbb;
+}
+.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 0.5em;
+  color: #333;
+  background: #f8f8f8;
+}
+
+.hljs-comment,
+.hljs-quote {
+  color: #998;
+  font-style: italic;
+}
+
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-subst {
+  color: #333;
+  font-weight: bold;
+}
+
+.hljs-number,
+.hljs-literal,
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag .hljs-attr {
+  color: #008080;
+}
+
+.hljs-string,
+.hljs-doctag {
+  color: #d14;
+}
+
+.hljs-title,
+.hljs-section,
+.hljs-selector-id {
+  color: #900;
+  font-weight: bold;
+}
+
+.hljs-subst {
+  font-weight: normal;
+}
+
+.hljs-type,
+.hljs-class .hljs-title {
+  color: #458;
+  font-weight: bold;
+}
+
+.hljs-tag,
+.hljs-name,
+.hljs-attribute {
+  color: #000080;
+  font-weight: normal;
+}
+
+.hljs-regexp,
+.hljs-link {
+  color: #009926;
+}
+
+.hljs-symbol,
+.hljs-bullet {
+  color: #990073;
+}
+
+.hljs-built_in,
+.hljs-builtin-name {
+  color: #0086b3;
+}
+
+.hljs-meta {
+  color: #999;
+  font-weight: bold;
+}
+
+.hljs-deletion {
+  background: #fdd;
+}
+
+.hljs-addition {
+  background: #dfd;
+}
+
+.hljs-emphasis {
+  font-style: italic;
+}
+
+.hljs-strong {
+  font-weight: bold;
+}
+
+/* Responsiveness */
+@media (max-width: 850px) {
+  body {
+    font-size: 70%;
+  }
+
+  .slide {
+    padding: 50px;
+  }
+
+  .slide-content {
+    width: auto;
+  }
+
+  img {
+    width: 100%;
+    border-radius: 3px;
+  }
+
+  h1 {
+    margin-top: 120px;
+  }
+
+  .prev,
+  .prev:hover {
+    border-right-color: rgba(135, 135, 135, .5);
+  }
+
+  .next,
+  .next:hover {
+    border-left-color: rgba(135, 135, 135, .5);
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+    overflow: hidden;
+    font-size: 50%;
+  }
+
+  .slide {
+    padding: 10px;
+  }
+  .slide-content {
+    height: 340px;
+    padding: 10px;
+    margin-top: 10px;
+  }
+
+  h1 {
+    margin-top: 50px;
+  }
+
+  ul {
+    padding-left: 25px;
+  }
+}
+
+@media print {
+  * {
+    -webkit-print-color-adjust: exact;
+  }
+
+  @page {
+    size: letter;
+  }
+
+  .hidden {
+    display: inline;
+  }
+
+  html {
+    height: 100%;
+    width: 100%;
+    overflow: visible;
+  }
+
+  body {
+    float: none !important;
+    padding: 0;
+    margin: 0 auto !important;
+    overflow: visible;
+    font-size: 52%;
+    background: none !important;
+    border: 0;
+  }
+
+  .progress,
+  .controls {
+    display: none;
+  }
+
+  .slide {
+    position: static;
+  }
+
+  .slide-content {
+    margin-top: 0;
+    margin-bottom: 40px;
+    height: 3.5in;
+    overflow: visible;
+    border: 1px solid #222;
+
+  }
+
+  .slide:nth-child(even) {
+    /* 2 slides per page */
+    page-break-before: always;
+  }
+}
+
+  </style>
+    <script async src="http://localhost:35729/livereload.js"></script>
+</head>
+<body>
+    <div class="progress">
+    <div class="progress-bar"></div>
+  </div>
+
+<div class="slides">
+    <div class="slide-wrapper">
+      <div class="slide" id="slide-1">
+        <div data-id="1" class="slide-overlay"></div>
+        <section class="slide-content"><h1 id="scala">Scala</h1>
+<h2 id="a-general-purpose-programming-language-providing-support-for-functional-programming-and-a-strong-static-type-system-">A general-purpose programming language providing support for functional programming and a strong static type system.</h2>
+</section>
+      </div>
+    </div>
+    <div class="slide-wrapper">
+      <div class="slide hidden" id="slide-2">
+        <div data-id="2" class="slide-overlay"></div>
+        <section class="slide-content"><h3 id="scala-in-a-nutshell">Scala in a Nutshell</h3>
+<ul>
+<li>Seamless Java Interop</li>
+<li>Type Inference</li>
+<li>Concurrency &amp; Distribution</li>
+<li>Traits</li>
+<li>Pattern Matching</li>
+<li>Higher-order functions</li>
+</ul>
+</section>
+      </div>
+    </div>
+    <div class="slide-wrapper">
+      <div class="slide hidden" id="slide-3">
+        <div data-id="3" class="slide-overlay"></div>
+        <section class="slide-content"><h3 id="building-tools">Building Tools</h3>
+<ul>
+<li><p>sbt</p>
+<p>  You can download it from <a href="https://www.scala-sbt.org/">https://www.scala-sbt.org/</a> .</p>
+</li>
+<li><p>maven</p>
+<p>  If you want to compile with Java, maven is suggested.</p>
+</li>
+</ul>
+</section>
+      </div>
+    </div>
+    <div class="slide-wrapper">
+      <div class="slide hidden" id="slide-4">
+        <div data-id="4" class="slide-overlay"></div>
+        <section class="slide-content"><h3 id="building-tools">Building Tools</h3>
+<ul>
+<li>recommended source management with sbt<pre><code>project/
+  plugins.sbt
+  build.properties
+src/
+main/
+  resources/
+  scala/
+  java/
+test/
+  resources
+  scala/
+  java/
+build.sbt
+</code></pre></li>
+</ul>
+</section>
+      </div>
+    </div>
+    <div class="slide-wrapper">
+      <div class="slide hidden" id="slide-5">
+        <div data-id="5" class="slide-overlay"></div>
+        <section class="slide-content"><h3 id="building-tools">Building Tools</h3>
+<ul>
+<li><p>an example of <code>build.sbt</code></p>
+<pre><code class="lang-scala">  <span class="hljs-type">ThisBuild</span> / scalaVersion := <span class="hljs-string">"2.12.6"</span>
+  <span class="hljs-type">ThisBuild</span> / organization := <span class="hljs-string">"com.example"</span>
+
+  <span class="hljs-keyword">lazy</span> <span class="hljs-keyword">val</span> hello = (project in file(<span class="hljs-string">"."</span>))
+  .settings(
+      name := <span class="hljs-string">"Hello"</span>,
+      libraryDependencies += <span class="hljs-string">"org.scalatest"</span> %% <span class="hljs-string">"scalatest"</span> % <span class="hljs-string">"3.0.5"</span> % <span class="hljs-type">Test</span>,
+  )
+</code></pre>
+</li>
+</ul>
+</section>
+      </div>
+    </div>
+    <div class="slide-wrapper">
+      <div class="slide hidden" id="slide-6">
+        <div data-id="6" class="slide-overlay"></div>
+        <section class="slide-content"><h3 id="building-tools">Building Tools</h3>
+<ul>
+<li>sbt commands<ul>
+<li>clean</li>
+<li>compile</li>
+<li>test</li>
+<li>console</li>
+<li>...</li>
+</ul>
+</li>
+</ul>
+</section>
+      </div>
+    </div>
+    <div class="slide-wrapper">
+      <div class="slide hidden" id="slide-7">
+        <div data-id="7" class="slide-overlay"></div>
+        <section class="slide-content"><h3 id="the-syntax-of-scala">The Syntax of Scala</h3>
+<ul>
+<li><p>Hello World</p>
+<pre><code class="lang-scala">  <span class="hljs-class"><span class="hljs-keyword">object</span> <span class="hljs-title">Main</span> </span>{
+  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">main</span></span>(args: <span class="hljs-type">Array</span>[<span class="hljs-type">String</span>]): <span class="hljs-type">Unit</span> =
+      println(<span class="hljs-string">"Hello, Scala developer!"</span>)
+  }
+</code></pre>
+</li>
+</ul>
+</section>
+      </div>
+    </div>
+    <div class="slide-wrapper">
+      <div class="slide hidden" id="slide-8">
+        <div data-id="8" class="slide-overlay"></div>
+        <section class="slide-content"><h3 id="the-syntax-of-scala">The Syntax of Scala</h3>
+<ul>
+<li><code>val</code> <code>var</code> <code>lazy</code></li>
+<li><code>def fun[T](x:A,y:B):C = expr</code></li>
+<li><code>(x:A,y:B) =&gt; expr</code></li>
+<li><code>{expr}</code> = <code>expr</code></li>
+<li><code>match x {case _=&gt;expr}</code></li>
+<li><code>new X</code></li>
+<li><code>x.fun(y)</code> = <code>x fun y</code></li>
+<li><code>;</code> and <code>return</code></li>
+</ul>
+</section>
+      </div>
+    </div>
+    <div class="slide-wrapper">
+      <div class="slide hidden" id="slide-9">
+        <div data-id="9" class="slide-overlay"></div>
+        <section class="slide-content"><h3 id="the-syntax-of-scala">The Syntax of Scala</h3>
+<ul>
+<li><code>package</code> <code>import</code></li>
+<li><code>class A[T](x:T){}</code></li>
+<li><code>case class B(x:A[C])</code></li>
+<li><code>extend</code> <code>with</code></li>
+<li><code>object</code></li>
+<li><code>trait</code></li>
+</ul>
+</section>
+      </div>
+    </div>
+    <div class="slide-wrapper">
+      <div class="slide hidden" id="slide-10">
+        <div data-id="10" class="slide-overlay"></div>
+        <section class="slide-content"><h3 id="the-syntax-of-scala">The Syntax of Scala</h3>
+<ul>
+<li><p><code>apply</code> : the factory function</p>
+<pre><code class="lang-scala">  <span class="hljs-type">List</span>(
+  <span class="hljs-string">"a string"</span>,
+  <span class="hljs-number">732</span>,  <span class="hljs-comment">// an integer</span>
+  'c',  <span class="hljs-comment">// a character</span>
+  <span class="hljs-literal">true</span>, <span class="hljs-comment">// a boolean value</span>
+  () =&gt; <span class="hljs-string">"an anonymous function returning a string"</span>
+  )
+</code></pre>
+</li>
+</ul>
+</section>
+      </div>
+    </div>
+    <div class="slide-wrapper">
+      <div class="slide hidden  " id="slide-11">
+        <div data-id="11" class="slide-overlay"></div>
+        <section class="slide-content"><h3 id="the-syntax-of-scala">The Syntax of Scala</h3>
+<ul>
+<li><p>currying</p>
+<pre><code class="lang-scala">  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">foldLeft</span></span>[<span class="hljs-type">B</span>](z: <span class="hljs-type">B</span>)(op: (<span class="hljs-type">B</span>, <span class="hljs-type">A</span>) =&gt; <span class="hljs-type">B</span>): <span class="hljs-type">B</span>
+  <span class="hljs-keyword">val</span> numbers = <span class="hljs-type">List</span>(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>, <span class="hljs-number">6</span>, <span class="hljs-number">7</span>, <span class="hljs-number">8</span>, <span class="hljs-number">9</span>, <span class="hljs-number">10</span>)
+  <span class="hljs-keyword">val</span> res = numbers.foldLeft(<span class="hljs-number">0</span>)((m, n) =&gt; m + n)
+  print(res) <span class="hljs-comment">// 55</span>
+</code></pre>
+</li>
+</ul>
+</section>
+      </div>
+    </div>
+    <div class="slide-wrapper">
+      <div class="slide hidden  " id="slide-12">
+        <div data-id="12" class="slide-overlay"></div>
+        <section class="slide-content"><h3 id="the-syntax-of-scala">The Syntax of Scala</h3>
+<ul>
+<li><p><code>_</code></p>
+<pre><code class="lang-scala">  numbers.foldLeft(<span class="hljs-number">0</span>, {(m: <span class="hljs-type">Int</span>, n: <span class="hljs-type">Int</span>) =&gt; m + n})
+  numbers.foldLeft(<span class="hljs-number">0</span>)(_+_)
+</code></pre>
+</li>
+</ul>
+</section>
+      </div>
+    </div>
+    <div class="slide-wrapper">
+      <div class="slide hidden" id="slide-13">
+        <div data-id="13" class="slide-overlay"></div>
+        <section class="slide-content"><h3 id="the-syntax-of-scala">The Syntax of Scala</h3>
+<ul>
+<li><p>monad</p>
+<pre><code class="lang-scala">  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">flatMap</span></span>[<span class="hljs-type">B</span>](f: (<span class="hljs-type">A</span>) =&gt; <span class="hljs-type">GenTraversableOnce</span>[<span class="hljs-type">B</span>]): <span class="hljs-type">TraversableOnce</span>[<span class="hljs-type">B</span>]
+  <span class="hljs-keyword">for</span>(x&lt;-<span class="hljs-type">M</span>) <span class="hljs-keyword">yield</span> y
+</code></pre>
+</li>
+</ul>
+</section>
+      </div>
+    </div>
+    <div class="slide-wrapper">
+      <div class="slide hidden" id="slide-14">
+        <div data-id="14" class="slide-overlay"></div>
+        <section class="slide-content"><h3 id="the-syntax-of-scala">The Syntax of Scala</h3>
+<ul>
+<li>variances<pre><code class="lang-scala">  <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Foo</span>[+<span class="hljs-type">A</span>] <span class="hljs-title">//</span> <span class="hljs-title">A</span> <span class="hljs-title">covariant</span> <span class="hljs-title">class</span></span>
+  <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Bar</span>[-<span class="hljs-type">A</span>] <span class="hljs-title">//</span> <span class="hljs-title">A</span> <span class="hljs-title">contravariant</span> <span class="hljs-title">class</span></span>
+  <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Baz</span>[<span class="hljs-type">A</span>]  <span class="hljs-title">//</span> <span class="hljs-title">An</span> <span class="hljs-title">invariant</span> <span class="hljs-title">class</span></span>
+</code></pre>
+</li>
+</ul>
+</section>
+      </div>
+    </div>
+    <div class="slide-wrapper">
+      <div class="slide hidden  " id="slide-15">
+        <div data-id="15" class="slide-overlay"></div>
+        <section class="slide-content"><h3 id="the-syntax-of-scala">The Syntax of Scala</h3>
+<ul>
+<li>lower &amp;&amp; upper bound<pre><code class="lang-scala">  <span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">Node</span>[+<span class="hljs-type">B</span>] </span>{
+      <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">prepend</span></span>[<span class="hljs-type">U</span> &gt;: <span class="hljs-type">B</span>](elem: <span class="hljs-type">U</span>): <span class="hljs-type">Node</span>[<span class="hljs-type">U</span>]
+  }
+  <span class="hljs-keyword">case</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ListNode</span>[+<span class="hljs-type">B</span>](<span class="hljs-params">h: <span class="hljs-type">B</span>, t: <span class="hljs-type">Node</span>[<span class="hljs-type">B</span>]</span>) <span class="hljs-keyword">extends</span> <span class="hljs-title">Node</span>[<span class="hljs-type">B</span>] </span>{
+      <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">prepend</span></span>[<span class="hljs-type">U</span> &gt;: <span class="hljs-type">B</span>](elem: <span class="hljs-type">U</span>): <span class="hljs-type">ListNode</span>[<span class="hljs-type">U</span>] = <span class="hljs-type">ListNode</span>(elem, <span class="hljs-keyword">this</span>)
+      <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">head</span></span>: <span class="hljs-type">B</span> = h
+      <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">tail</span></span>: <span class="hljs-type">Node</span>[<span class="hljs-type">B</span>] = t
+  }
+</code></pre>
+</li>
+</ul>
+</section>
+      </div>
+    </div>
+    <div class="slide-wrapper">
+      <div class="slide hidden" id="slide-16">
+        <div data-id="16" class="slide-overlay"></div>
+        <section class="slide-content"><pre><code class="lang-scala">    <span class="hljs-keyword">case</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Nil</span>[+<span class="hljs-type">B</span>](<span class="hljs-params"></span>) <span class="hljs-keyword">extends</span> <span class="hljs-title">Node</span>[<span class="hljs-type">B</span>] </span>{
+        <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">prepend</span></span>[<span class="hljs-type">U</span> &gt;: <span class="hljs-type">B</span>](elem: <span class="hljs-type">U</span>): <span class="hljs-type">ListNode</span>[<span class="hljs-type">U</span>] = <span class="hljs-type">ListNode</span>(elem, <span class="hljs-keyword">this</span>)
+    }
+</code></pre>
+</section>
+      </div>
+    </div>
+    <div class="slide-wrapper">
+      <div class="slide hidden" id="slide-17">
+        <div data-id="17" class="slide-overlay"></div>
+        <section class="slide-content"><h3 id="the-syntax-of-scala">The Syntax of Scala</h3>
+<ul>
+<li>compound type<pre><code class="lang-scala">  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">cloneAndReset</span></span>(obj: <span class="hljs-type">Cloneable</span> <span class="hljs-keyword">with</span> <span class="hljs-type">Resetable</span>): <span class="hljs-type">Cloneable</span> = {
+      <span class="hljs-comment">//...</span>
+  }
+</code></pre>
+</li>
+</ul>
+</section>
+      </div>
+    </div>
+    <div class="slide-wrapper">
+      <div class="slide hidden" id="slide-18">
+        <div data-id="18" class="slide-overlay"></div>
+        <section class="slide-content"><h3 id="the-syntax-of-scala">The Syntax of Scala</h3>
+<ul>
+<li>implicit parameters<pre><code class="lang-scala">  <span class="hljs-keyword">abstract</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Monoid</span>[<span class="hljs-type">A</span>] </span>{
+      <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">add</span></span>(x: <span class="hljs-type">A</span>, y: <span class="hljs-type">A</span>): <span class="hljs-type">A</span>
+      <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">unit</span></span>: <span class="hljs-type">A</span>
+  }
+  <span class="hljs-class"><span class="hljs-keyword">object</span> <span class="hljs-title">ImplicitTest</span> </span>{
+  <span class="hljs-keyword">implicit</span> <span class="hljs-keyword">val</span> stringMonoid: <span class="hljs-type">Monoid</span>[<span class="hljs-type">String</span>] = <span class="hljs-keyword">new</span> <span class="hljs-type">Monoid</span>[<span class="hljs-type">String</span>] {
+      <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">add</span></span>(x: <span class="hljs-type">String</span>, y: <span class="hljs-type">String</span>): <span class="hljs-type">String</span> = x concat y
+      <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">unit</span></span>: <span class="hljs-type">String</span> = <span class="hljs-string">""</span>
+  }
+</code></pre>
+</li>
+</ul>
+</section>
+      </div>
+    </div>
+    <div class="slide-wrapper">
+      <div class="slide hidden" id="slide-19">
+        <div data-id="19" class="slide-overlay"></div>
+        <section class="slide-content"><pre><code class="lang-scala">        <span class="hljs-keyword">implicit</span> <span class="hljs-keyword">val</span> intMonoid: <span class="hljs-type">Monoid</span>[<span class="hljs-type">Int</span>] = <span class="hljs-keyword">new</span> <span class="hljs-type">Monoid</span>[<span class="hljs-type">Int</span>] {
+            <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">add</span></span>(x: <span class="hljs-type">Int</span>, y: <span class="hljs-type">Int</span>): <span class="hljs-type">Int</span> = x + y
+            <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">unit</span></span>: <span class="hljs-type">Int</span> = <span class="hljs-number">0</span>
+        }
+
+        <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">sum</span></span>[<span class="hljs-type">A</span>](xs: <span class="hljs-type">List</span>[<span class="hljs-type">A</span>])(<span class="hljs-keyword">implicit</span> m: <span class="hljs-type">Monoid</span>[<span class="hljs-type">A</span>]): <span class="hljs-type">A</span> =
+            <span class="hljs-keyword">if</span> (xs.isEmpty) m.unit
+            <span class="hljs-keyword">else</span> m.add(xs.head, sum(xs.tail))
+
+        <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">main</span></span>(args: <span class="hljs-type">Array</span>[<span class="hljs-type">String</span>]): <span class="hljs-type">Unit</span> = {
+            println(sum(<span class="hljs-type">List</span>(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>)))       <span class="hljs-comment">// uses IntMonoid implicitly</span>
+            println(sum(<span class="hljs-type">List</span>(<span class="hljs-string">"a"</span>, <span class="hljs-string">"b"</span>, <span class="hljs-string">"c"</span>))) <span class="hljs-comment">// uses StringMonoid implicitly</span>
+        }
+    }
+</code></pre>
+</section>
+      </div>
+    </div>
+    <div class="slide-wrapper">
+      <div class="slide hidden" id="slide-20">
+        <div data-id="20" class="slide-overlay"></div>
+        <section class="slide-content"><h3 id="the-syntax-of-scala">The Syntax of Scala</h3>
+<ul>
+<li>by-name parameters<pre><code class="lang-scala">  <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">calculate</span></span>(input: =&gt; <span class="hljs-type">Int</span>) = input * <span class="hljs-number">37</span>
+</code></pre>
+</li>
+</ul>
+</section>
+      </div>
+    </div>
+    <div class="slide-wrapper">
+      <div class="slide hidden" id="slide-21">
+        <div data-id="21" class="slide-overlay"></div>
+        <section class="slide-content"><h3 id="the-syntax-of-scala">The Syntax of Scala</h3>
+<ul>
+<li>adt in scala<pre><code class="lang-scala">  <span class="hljs-keyword">sealed</span> <span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">Tree</span>[<span class="hljs-type">T</span>]</span>
+  <span class="hljs-keyword">case</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Node</span>[<span class="hljs-type">T</span>](<span class="hljs-params">left: <span class="hljs-type">Tree</span>[<span class="hljs-type">T</span>], right: <span class="hljs-type">Tree</span>[<span class="hljs-type">T</span>]</span>) <span class="hljs-keyword">extends</span> <span class="hljs-title">Tree</span>[<span class="hljs-type">T</span>]</span>
+  <span class="hljs-keyword">case</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Leaf</span>[<span class="hljs-type">T</span>](<span class="hljs-params">value: <span class="hljs-type">T</span></span>) <span class="hljs-keyword">extends</span> <span class="hljs-title">Tree</span>[<span class="hljs-type">T</span>]</span>
+</code></pre>
+</li>
+</ul>
+</section>
+      </div>
+    </div>
+    <div class="slide-wrapper">
+      <div class="slide hidden" id="slide-22">
+        <div data-id="22" class="slide-overlay"></div>
+        <section class="slide-content"><h3 id="the-scala-libraries">The Scala Libraries</h3>
+<ul>
+<li><p>regex</p>
+<pre><code class="lang-scala">  <span class="hljs-keyword">import</span> scala.util.matching.<span class="hljs-type">Regex</span>
+
+  <span class="hljs-keyword">val</span> numberPattern: <span class="hljs-type">Regex</span> = <span class="hljs-string">"[0-9]"</span>.r
+
+  numberPattern.findFirstMatchIn(<span class="hljs-string">"awesomepassword"</span>) <span class="hljs-keyword">match</span> {
+  <span class="hljs-keyword">case</span> <span class="hljs-type">Some</span>(_) =&gt; println(<span class="hljs-string">"Password OK"</span>)
+  <span class="hljs-keyword">case</span> <span class="hljs-type">None</span> =&gt; println(<span class="hljs-string">"Password must contain a number"</span>)
+  }
+</code></pre>
+</li>
+</ul>
+</section>
+      </div>
+    </div>
+    <div class="slide-wrapper">
+      <div class="slide hidden" id="slide-23">
+        <div data-id="23" class="slide-overlay"></div>
+        <section class="slide-content"><h3 id="the-scala-libraries">The Scala Libraries</h3>
+<ul>
+<li>collections<pre><code class="lang-scala">  <span class="hljs-keyword">val</span> seq = <span class="hljs-type">Seq</span>(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>)
+  <span class="hljs-keyword">val</span> set = <span class="hljs-type">Set</span>(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>)
+  <span class="hljs-keyword">val</span> map = <span class="hljs-type">Map</span>(<span class="hljs-number">1</span> -&gt; <span class="hljs-string">"one"</span>, <span class="hljs-number">2</span> -&gt; <span class="hljs-string">"two"</span>, <span class="hljs-number">3</span> -&gt; <span class="hljs-string">"three"</span>)
+</code></pre>
+</li>
+</ul>
+</section>
+      </div>
+    </div>
+    <div class="slide-wrapper">
+      <div class="slide hidden" id="slide-24">
+        <div data-id="24" class="slide-overlay"></div>
+        <section class="slide-content"><pre><code class="lang-scala">    <span class="hljs-keyword">val</span> votes = <span class="hljs-type">Seq</span>((<span class="hljs-string">"scala"</span>, <span class="hljs-number">1</span>), (<span class="hljs-string">"java"</span>, <span class="hljs-number">4</span>), (<span class="hljs-string">"scala"</span>, <span class="hljs-number">10</span>), (<span class="hljs-string">"scala"</span>, <span class="hljs-number">1</span>), (<span class="hljs-string">"python"</span>, <span class="hljs-number">10</span>))
+    <span class="hljs-keyword">val</span> orderedVotes = votes
+    .groupBy(_._1)
+    .map { <span class="hljs-keyword">case</span> (which, counts) =&gt;
+        (which, counts.foldLeft(<span class="hljs-number">0</span>)(_ + _._2))
+    }.toSeq
+    .sortBy(_._2)
+    .reverse
+</code></pre>
+</section>
+      </div>
+    </div>
+    <div class="slide-wrapper">
+      <div class="slide hidden" id="slide-25">
+        <div data-id="25" class="slide-overlay"></div>
+        <section class="slide-content"><h3 id="references">References</h3>
+<ul>
+<li><a href="https://www.scala-sbt.org/">sbt documentation</a></li>
+<li><a href="https://docs.scala-lang.org/tour/tour-of-scala.html">Tour of Scala</a></li>
+<li><a href="http://twitter.github.io/effectivescala/index.html">Effective Scala</a></li>
+</ul>
+</section>
+      </div>
+    </div>
+    <div class="slide-wrapper">
+      <div class="slide hidden author-slide" id="slide-26">
+        <div data-id="26" class="slide-overlay"></div>
+        <section class="slide-content"><div class="author">
+  <h1 class="name">Nicekingwei</h1>
+    <h3 class="email">
+      <a href="mailto:nicekingwei@foxmail.com">nicekingwei@foxmail.com</a>
+    </h3>
+</div>
+</section>
+      </div>
+    </div>
+</div>
+
+  <div class="controls">
+    <div class="arrow prev"></div>
+    <div class="overview">☷</div>
+    <div class="arrow next"></div>
+  </div>
+
+
+  <script type="text/javascript">
+    /**
+ * Returns the current page number of the presentation.
+ */
+function currentPosition() {
+  return parseInt(document.querySelector('.slide:not(.hidden)').id.slice(6));
+}
+
+/**
+ * Navigates forward n pages
+ * If n is negative, we will navigate in reverse
+ */
+function navigate(n) {
+  var position = currentPosition();
+  var numSlides = document.getElementsByClassName('slide').length;
+
+  var $fragments = document.querySelectorAll('#slide-' + position + ' .fragment');
+  var fragmentsFinished = false;
+  if ($fragments.length) {
+    if (n > 0) {
+      var $f = document.querySelectorAll('#slide-' + position + ' .fragment.hidden');
+      if (!$f.length) fragmentsFinished = true;
+      else $f[0].classList.remove('hidden');
+    } else {
+      var $f = document.querySelectorAll('#slide-' + position + ' .fragment:not(.hidden)');
+      if (!$f.length) fragmentsFinished = true;
+      else $f[$f.length - 1].classList.add('hidden');
+    }
+  } else {
+    fragmentsFinished = true;
+  }
+
+  if (fragmentsFinished) {
+    /* Positions are 1-indexed, so we need to add and subtract 1 */
+    var nextPosition = (position - 1 + n) % numSlides + 1;
+
+    /* Normalize nextPosition in-case of a negative modulo result */
+    nextPosition = (nextPosition - 1 + numSlides) % numSlides + 1;
+
+    document.getElementById('slide-' + position).classList.add('hidden');
+    document.getElementById('slide-' + nextPosition).classList.remove('hidden');
+
+    updateProgress();
+    updateURL();
+    updateTabIndex();
+  }
+
+}
+
+/**
+ * Updates the current URL to include a hashtag of the current page number.
+ */
+function updateURL() {
+  try {
+    window.history.replaceState({}, null, '#' + currentPosition());
+  } catch (e) {
+    window.location.hash = currentPosition();
+  }
+}
+
+/**
+ * Sets the progress indicator.
+ */
+function updateProgress() {
+  var progressBar = document.querySelector('.progress-bar');
+
+  if (progressBar !== null) {
+    var numSlides = document.getElementsByClassName('slide').length;
+    var position = currentPosition() - 1;
+    var percent = (numSlides === 1) ? 100 : 100 * position / (numSlides - 1);
+    progressBar.style.width = percent.toString() + '%';
+  }
+}
+
+/**
+ * Removes tabindex property from all links on the current slide, sets
+ * tabindex = -1 for all links on other slides. Prevents slides from appearing
+ * out of control.
+ */
+function updateTabIndex() {
+  var allLinks = document.querySelectorAll('.slide a');
+  var position = currentPosition();
+  var currentPageLinks = document.getElementById('slide-' + position).querySelectorAll('a');
+  var i;
+
+  for (i = 0; i < allLinks.length; i++) {
+    allLinks[i].setAttribute('tabindex', -1);
+  }
+
+  for (i = 0; i < currentPageLinks.length; i++) {
+    currentPageLinks[i].removeAttribute('tabindex');
+  }
+}
+
+/**
+ * Determines whether or not we are currently in full screen mode
+ */
+function isFullScreen() {
+  return document.fullscreenElement ||
+    document.mozFullScreenElement ||
+    document.webkitFullscreenElement ||
+    document.msFullscreenElement;
+}
+
+/**
+ * Toggle fullScreen mode on document element.
+ * Works on chrome (>= 15), firefox (>= 9), ie (>= 11), opera(>= 12.1), safari (>= 5).
+ */
+function toggleFullScreen() {
+  /* Convenient renames */
+  var docElem = document.documentElement;
+  var doc = document;
+
+  docElem.requestFullscreen =
+    docElem.requestFullscreen ||
+    docElem.msRequestFullscreen ||
+    docElem.mozRequestFullScreen ||
+    docElem.webkitRequestFullscreen.bind(docElem, Element.ALLOW_KEYBOARD_INPUT);
+
+  doc.exitFullscreen =
+    doc.exitFullscreen ||
+    doc.msExitFullscreen ||
+    doc.mozCancelFullScreen ||
+    doc.webkitExitFullscreen;
+
+  isFullScreen() ? doc.exitFullscreen() : docElem.requestFullscreen();
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  // Update the tabindex to prevent weird slide transitioning
+  updateTabIndex();
+
+  // If the location hash specifies a page number, go to it.
+  var page = window.location.hash.slice(1);
+  if (page) {
+    navigate(parseInt(page) - 1);
+  }
+
+  document.onkeydown = function(e) {
+    if(e.target.tagName.toLowerCase() === 'textarea') return;
+    var kc = e.keyCode;
+
+    // left, down, H, J, backspace, PgUp - BACK
+    // up, right, K, L, space, PgDn - FORWARD
+    // enter - FULLSCREEN
+    if (kc === 37 || kc === 40 || kc === 8 || kc === 72 || kc === 74 || kc === 33) {
+      navigate(-1);
+    } else if (kc === 38 || kc === 39 || kc === 32 || kc === 75 || kc === 76 || kc === 34) {
+      navigate(1);
+    } else if (kc === 13) {
+      toggleFullScreen();
+    } else if (kc === 27) {
+      toggleOverview();
+    }
+  };
+
+  if (document.querySelector('.next') && document.querySelector('.prev')) {
+    document.querySelector('.next').onclick = function(e) {
+      e.preventDefault();
+      navigate(1);
+    };
+
+    document.querySelector('.prev').onclick = function(e) {
+      e.preventDefault();
+      navigate(-1);
+    };
+  }
+  if (document.querySelector('.overview')) {
+    document.querySelector('.overview').onclick = function(e) {
+      toggleOverview();
+    }
+  }
+  var $overlays = document.querySelectorAll('.slide-overlay');
+  [].forEach.call($overlays, function($overlay) {
+    $overlay.onclick = function(event) {
+      navigate(parseInt(event.target.dataset.id) - currentPosition());
+      toggleOverview();
+    }
+  });
+
+  var $fragments = document.querySelectorAll('.fragment');
+  [].forEach.call($fragments, function($fragment) {
+    $fragment.classList.add('hidden');
+  });
+
+});
+
+function toggleOverview() {
+  if (window.$style !== undefined) {
+    window.$style.remove();
+    delete window.$style;
+    document.querySelector('.slides').classList.remove('active');
+  } else {
+    var $slides = document.querySelector('.slides');
+    $slides.classList.add('active');
+    var slidesList = document.querySelectorAll('.slide-wrapper');
+
+    var w = window,
+      d = document,
+      e = d.documentElement,
+      g = d.getElementsByTagName('body')[0],
+      x = w.innerWidth || e.clientWidth || g.clientWidth,
+      y = w.innerHeight || e.clientHeight || g.clientHeight;
+
+    window.$style = document.createElement('style');
+    window.$style.innerHTML = '.slide-wrapper {width: ' + (x * 0.25) + 'px; height: ' + (y * 0.25) + 'px; } body .slide {width: ' + x + 'px; height: ' + y + 'px; position: relative; transform: scale(0.25,0.25); transform-origin: 0 0; } .slide.hidden{display: block; }';
+
+    document.getElementsByTagName('head')[0].appendChild(window.$style);
+  }
+}
+  </script>
+</body>
+</html>
